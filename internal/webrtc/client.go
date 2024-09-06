@@ -60,6 +60,13 @@ func streamsHandler(rawURL string) (core.Producer, error) {
 				return whepClient(rawURL)
 			}
 		}
+	} else {
+		format := query.Get("format")
+		if format == "kinesis-credential" {
+			return kinesisCredentialClient(rawURL, query, "webrtc/kinesis-credential", &kinesisCredentialClientOpts{})
+		} else if format == "switchbot" {
+			return switchbotClient(rawURL, query)
+		}
 	}
 	return nil, errors.New("unsupported url: " + rawURL)
 }

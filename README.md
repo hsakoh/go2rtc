@@ -681,14 +681,17 @@ Supports connection to [Wyze](https://www.wyze.com/) cameras, using WebRTC proto
 **kinesis** (*from [v1.6.1](https://github.com/AlexxIT/go2rtc/releases/tag/v1.6.1)*)
 
 Supports [Amazon Kinesis Video Streams](https://aws.amazon.com/kinesis/video-streams/), using WebRTC protocol. You need to specify signalling WebSocket URL with all credentials in query params, `client_id` and `ice_servers` list in [JSON format](https://developer.mozilla.org/en-US/docs/Web/API/RTCIceServer).
+With `kinesis-credential`, you can enumerate ICE servers during connection using credentials (`clientId`, `region`, `accessKeyId`, `secretAccessKey`, `sessionToken`), and signatures can also be handled internally. and choose to use STUN/TURN.
 
 ```yaml
 streams:
-  webrtc-whep:    webrtc:http://192.168.1.123:1984/api/webrtc?src=camera1
-  webrtc-go2rtc:  webrtc:ws://192.168.1.123:1984/api/ws?src=camera1
-  webrtc-openipc: webrtc:ws://192.168.1.123/webrtc_ws#format=openipc#ice_servers=[{"urls":"stun:stun.kinesisvideo.eu-north-1.amazonaws.com:443"}]
-  webrtc-wyze:    webrtc:http://192.168.1.123:5000/signaling/camera1?kvs#format=wyze
-  webrtc-kinesis: webrtc:wss://...amazonaws.com/?...#format=kinesis#client_id=...#ice_servers=[{...},{...}]
+  webrtc-whep:               webrtc:http://192.168.1.123:1984/api/webrtc?src=camera1
+  webrtc-go2rtc:             webrtc:ws://192.168.1.123:1984/api/ws?src=camera1
+  webrtc-openipc:            webrtc:ws://192.168.1.123/webrtc_ws#format=openipc#ice_servers=[{"urls":"stun:stun.kinesisvideo.eu-north-1.amazonaws.com:443"}]
+  webrtc-wyze:               webrtc:http://192.168.1.123:5000/signaling/camera1?kvs#format=wyze
+  webrtc-kinesis:            webrtc:wss://...amazonaws.com/?...#format=kinesis#client_id=...#ice_servers=[{...},{...}]
+  webrtc-kinesis-credential: webrtc:#format=kinesis-credential#natTraversal=StunTurn#region=ap-northeast-1#clientId=...#channelName=...6#accessKeyId=...#secretAccessKey=...#sessionToken=...
+  webrtc-switchbot:          webrtc:#format=switchbot#resolution=HD#natTraversal=Disable#region=ap-northeast-1#clientId=...#channelName=...6#accessKeyId=...#secretAccessKey=...#sessionToken=...
 ```
 
 **PS.** For `kinesis` sources you can use [echo](#source-echo) to get connection params using `bash`/`python` or any other script language.
