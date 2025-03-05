@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SwitchBot KVS Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col col-lg-12">
+                <div class="accordion" id="accordionLogIn">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingLogIn">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseLogIn" aria-expanded="false" aria-controls="collapseLogIn">
+                                Step.1 Login SwitchBot
+                            </button>
+                        </h2>
+                        <div id="collapseLogIn" class="accordion-collapse collapse" aria-labelledby="headingLogIn"
+                            data-bs-parent="#accordionLogIn">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>No data is transmitted to destinations other than the API used by the SwitchBot
+                                        app.</li>
+                                    <li>Enter your SwitchBot account and log in.</li>
+                                    <li>After logging in, the access token required for API access will be displayed.
+                                    </li>
+                                    <li>https://account.api.switchbot.net/account/api/v1/user/login</li>
+                                </ul>
+                                <div class="row mb-3">
+                                    <div class="col-auto">
+                                        <label for="email" class="form-label">EmailAddress</label>
+                                        <input type="email" class="form-control" id="email"
+                                            placeholder="name@example.com">
+                                    </div>
+                                    <div class="col-auto">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" id="login" class="btn btn-primary mt-4">Login</button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label for="accesstoken" class="form-label">Accsess Token(JWT)</label>
+                                        <textarea id="accesstoken" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <label for="refreshtoken" class="form-label">Refresh Token</label>
+                                        <textarea id="refreshtoken" class="form-control form-control-sm" rows="1"
+                                            cols="90">
+                                        </textarea>
+                                        For future logins, you can skip re-login by entering the access token and
+                                        refresh token.
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="accesstoken-decode" class="form-label">Accsess Token(Decode)</label>
+                                        <textarea id="accesstoken-decode" class="form-control form-control-sm" rows="5"
+                                            cols="90">
+                                        </textarea>
+                                        <label for="deviceid" class="form-label">Device ID (if not specified, a UUID
+                                            will be generated)</label>
+                                        <textarea id="deviceid" class="form-control form-control-sm" rows="1" cols="90">
+                                        </textarea>
+                                        <button type="button" id="save-token" class="btn btn-outline-warning mt-4">Save
+                                            Tokens</button>
+                                        <button type="button" id="load-token" class="btn btn-outline-info mt-4">Load
+                                            Tokens</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col col-lg-12">
+                <div class="accordion" id="accordionBotRegion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingBotRegion">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseBotRegion" aria-expanded="false"
+                                aria-controls="collapseBotRegion">
+                                Step.2 Get UserInfo(BotRegion)/Endpoint
+                            </button>
+                        </h2>
+                        <div id="collapseBotRegion" class="accordion-collapse collapse"
+                            aria-labelledby="headingBotRegion" data-bs-parent="#accordionBotRegion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>The BotRegion is identified from the user information.
+                                        <ul>
+                                            <li>https://account.api.switchbot.net/account/api/v1/user/userinfo</li>
+                                        </ul>
+                                    </li>
+                                    <li>The Endpoint is determined from the BotRegion.
+                                        <ul>
+                                            <li>https://account.api.switchbot.net/admin/admin/api/v1/botregion/endpoint
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <button type="button" id="getuserinfo"
+                                                class="btn btn-primary mt-4">UserInfo</button>
+                                        </div>
+                                        <label for="userinfo" class="form-label">User Info</label>
+                                        <textarea id="userinfo" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <label for="botregion" class="form-label">BotRegion</label>
+                                        <textarea id="botregion" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <button type="button" id="getendpoints"
+                                                class="btn btn-primary mt-4">Endpoint</button>
+                                        </div>
+                                        <label for="endpoints" class="form-label">EndPoints</label>
+                                        <textarea id="endpoints" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <label for="wonderlabendpoint" class="form-label">Wonderlabs
+                                            EndPoint</label>
+                                        <textarea id="wonderlabendpoint" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                        <button type="button" id="save-botregion"
+                                            class="btn btn-outline-warning mt-4">Save
+                                            BotRegion/EndPoints</button>
+                                        <button type="button" id="load-botregion" class="btn btn-outline-info mt-4">Load
+                                            BotRegion/EndPoints</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col col-lg-12">
+                <div class="accordion" id="accordionGetDevices">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingGetDevices">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseGetDevices" aria-expanded="false"
+                                aria-controls="collapseGetDevices">
+                                Step.3 Enumerate groups and devices.<span class="ml-5 text-danger">CORS needs to be
+                                    disabled.<span class="fs-6 fw-light">(WonderlabsEndpoint does not accept the OPTIONS
+                                        method, so preflight does not work)</span></span>
+                            </button>
+                        </h2>
+                        <div id="collapseGetDevices" class="accordion-collapse collapse"
+                            aria-labelledby="headingGetDevices" data-bs-parent="#accordionGetDevices">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Enumerate groups.
+                                        <ul>
+                                            <li>https://{Wonderlabs EndPoint}/homepage/v1/group/getall</li>
+                                        </ul>
+                                    </li>
+                                    <li>Specify a group to enumerate devices.
+                                        <ul>
+                                            <li>https://{Wonderlabs EndPoint}/homepage/v1/device/getall</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <button type="button" id="getgroups"
+                                                class="btn btn-primary mt-4">GroupGetAll</button>
+                                        </div>
+                                        <label for="groups" class="form-label">Groups</label>
+                                        <textarea id="groups" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <label for="groupid" class="form-label">Group</label>
+                                        <select id="groupid" class="form-select">
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <button type="button" id="getdevices"
+                                                class="btn btn-primary mt-4">DeviceGetAll</button>
+                                        </div>
+                                        <label for="devices" class="form-label">Devices</label>
+                                        <textarea id="devices" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <button type="button" id="save-devices"
+                                            class="btn btn-outline-warning mt-4">Save
+                                            Groups/Devices</button>
+                                        <button type="button" id="load-devices" class="btn btn-outline-info mt-4">Load
+                                            Groups/Devices</button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-8">
+                                        <table id="deviceListTable" class="table align-middle">
+                                            <thead>
+                                                <tr class="table-primary">
+                                                    <th>DeviceType</th>
+                                                    <th>DeviceId</th>
+                                                    <th>DeviceName</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template id="deviceListRowTemplate">
+                                                    <tr class="table-light">
+                                                        <td class="deviceType"></td>
+                                                        <td class="deviceId"></td>
+                                                        <td class="deviceName"></td>
+                                                        <td class="deviceDetail"><button
+                                                                class="btn btn-outline-secondary"
+                                                                onclick="showDeviceDetail(this)">show detail</button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-4">
+                                        <textarea id="deviceDetail" class="form-control form-control-sm"
+                                            style="height:100%" cols="75">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col col-lg-12">
+                <div class="accordion" id="accordionKVSViewer">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingKVSViewer">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseKVSViewer" aria-expanded="true" aria-controls="collapseKVSViewer">
+                                Step.4 ConnectAsViewer
+                            </button>
+                        </h2>
+                        <div id="collapseKVSViewer" class="accordion-collapse collapse show"
+                            aria-labelledby="headingKVSViewer" data-bs-parent="#accordionKVSViewer">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>KVS ConnectAsViewer
+                                        <ul>
+                                            <li>https://{Wonderlabs EndPoint}/kvs/v1/connectAsViewer</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <div class="row row-cols-lg-auto mb-3">
+                                    <div class="col-5">
+                                        <select id="deviceId" class="form-select">
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="button" id="connectAsViewer" class="btn btn-primary">Call connectAsViewer</button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <textarea id="connectAsViewerResponse" class="form-control form-control-sm" rows="16"
+                                            cols="200" readonly>
+                                        </textarea>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <button type="button" id="save-connectAsViewer" class="btn btn-outline-warning mt-4">Save
+                                                connectAsViewer</button>
+                                            <button type="button" id="load-connectAsViewer" class="btn btn-outline-info mt-4">Load
+                                                connectAsViewer</button>
+                                        </div>
+                                        <label for="kvsChannel" class="form-label">channel</label>
+                                        <textarea id="kvsChannel" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                        <label for="kvsAccess" class="form-label">access</label>
+                                        <textarea id="kvsAccess" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                        <label for="kvsSecret" class="form-label">secret</label>
+                                        <textarea id="kvsSecret" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                        <label for="kvsToken" class="form-label">token</label>
+                                        <textarea id="kvsToken" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                        <label for="kvsExpiration" class="form-label">expiration</label>
+                                        <textarea id="kvsExpiration" class="form-control form-control-sm" rows="1"
+                                            cols="90"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <div>
+                                            <button type="button" id="generate-signedUrl" class="btn btn-outline-warning mt-4">Generate SignedUrl</button>
+                                        </div>
+                                        <label for="signedUrl" class="form-label">signedUrl</label>
+                                        <textarea id="signedUrl" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                        <label for="iceServer" class="form-label">iceServer</label>
+                                        <textarea id="iceServer" class="form-control form-control-sm" rows="5"
+                                            cols="90"></textarea>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="go2rtc" class="form-label">go2rtc yaml(use signed URL(299sec))</label>
+                                        <textarea id="go2rtc" class="form-control form-control-sm" rows="10"
+                                            cols="90"></textarea>
+                                        <label for="go2rtc-put" class="form-label">go2rtc PUT URL(use signed URL(299sec))</label>
+                                        <textarea id="go2rtc-put" class="form-control form-control-sm" rows="10"
+                                            cols="90"></textarea>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="go2rtc-cred" class="form-label">go2rtc yaml(for credential)</label>
+                                        <textarea id="go2rtc-cred" class="form-control form-control-sm" rows="10"
+                                            cols="90"></textarea>
+                                        <label for="go2rtc-cred-put" class="form-label">go2rtc2 PUT URL(for credential)</label>
+                                        <textarea id="go2rtc-cred-put" class="form-control form-control-sm" rows="10"
+                                            cols="90"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="./kvs-webrtc.js"></script>
+        <script src="./aws-sdk-all-2.1646.0.js"></script>
+        <script>
+            $(function () {
+                loadStorageAll();
+                $("#keyDetailRow").hide();
+                $("#keyMapRow").hide();
+                $("#airConditionerKeyMapRow").hide();
+
+                $('#login').click(function () {
+                    $('#accesstoken').val('');
+                    $('#refreshtoken').val('');
+                    $('#accesstoken-decode').val('');
+
+                    if ($('#deviceid').val().trim() === '') {
+                        $('#deviceid').val(self.crypto.randomUUID());
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "https://account.api.switchbot.net/account/api/v1/user/login",
+                        data: JSON.stringify({
+                            clientId: "5nnwmhmsa9xxskm14hd85lm9bm",
+                            deviceInfo: {
+                                deviceId: $('#deviceid').val(),
+                                deviceName: "Browser",
+                                model: "IrCodeCustomize"
+                            },
+                            grantType: "password",
+                            password: $('#password').val(),
+                            username: $('#email').val(),
+                            verifyCode: ""
+                        }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                    }).done(function (resp) {
+                        if (!resp.statusCode || resp.statusCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#accesstoken').val(resp.body.access_token);
+                        $('#refreshtoken').val(resp.body.refresh_token);
+                        $('#accesstoken-decode').val(getJwtPaylod(resp.body.access_token));
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error.please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                $('#save-token').click(function () {
+                    if (confirm("Save to the browser's local storage.")) {
+                        localStorage.setItem("accesstoken", $('#accesstoken').val());
+                        localStorage.setItem("refreshtoken", $('#refreshtoken').val());
+                        localStorage.setItem("accesstoken-decode", $('#accesstoken-decode').val());
+                        localStorage.setItem("deviceid", $('#deviceid').val());
+                    }
+                });
+                $('#load-token').click(function () {
+                    if (confirm("Load from the browser's local storage.")) {
+                        $('#accesstoken').val(localStorage.getItem("accesstoken"));
+                        $('#refreshtoken').val(localStorage.getItem("refreshtoken"));
+                        $('#accesstoken-decode').val(localStorage.getItem("accesstoken-decode"));
+                        $('#deviceid').val(localStorage.getItem("deviceid"));
+                    }
+                });
+                $('#getuserinfo').click(async function () {
+                    $('#userinfo').val('');
+                    $('#botregion').val('');
+
+                    await checkTokenRefresh();
+
+                    $.ajax({
+                        type: "post",
+                        url: "https://account.api.switchbot.net/account/api/v1/user/userinfo",
+                        dataType: "json",
+                        headers: {
+                            authorization: $('#accesstoken').val()
+                        }
+                    }).done(function (resp) {
+                        if (!resp.statusCode || resp.statusCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#userinfo').val(JSON.stringify(resp.body, null, 2));
+                        $('#botregion').val(resp.body.botRegion);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error. please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                $('#getendpoints').click(async function () {
+                    $('#endpoints').val('');
+                    $('#wonderlabendpoint').val('');
+
+                    await checkTokenRefresh();
+                    $.ajax({
+                        type: "post",
+                        url: "https://account.api.switchbot.net/admin/admin/api/v1/botregion/endpoint",
+                        data: JSON.stringify({
+                            botRegion: $('#botregion').val(),
+                        }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        headers: {
+                            authorization: $('#accesstoken').val()
+                        }
+                    }).done(function (resp) {
+                        if (!resp.resultCode || resp.resultCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#endpoints').val(JSON.stringify(resp.data, null, 2));
+                        $('#wonderlabendpoint').val(resp.data.filter(v => v.name === 'wonderlabs')[0].host);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error. please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                $('#save-botregion').click(function () {
+                    if (confirm("Save to the browser's local storage.")) {
+                        localStorage.setItem("userinfo", $('#userinfo').val());
+                        localStorage.setItem("botregion", $('#botregion').val());
+                        localStorage.setItem("endpoints", $('#endpoints').val());
+                        localStorage.setItem("wonderlabendpoint", $('#wonderlabendpoint').val());
+                    }
+                });
+                $('#load-botregion').click(function () {
+                    if (confirm("Load from the browser's local storage.")) {
+                        $('#userinfo').val(localStorage.getItem("userinfo"));
+                        $('#botregion').val(localStorage.getItem("botregion"));
+                        $('#endpoints').val(localStorage.getItem("endpoints"));
+                        $('#wonderlabendpoint').val(localStorage.getItem("wonderlabendpoint"));
+                    }
+                });
+                $('#getgroups').click(async function () {
+                    $('#groups').val('');
+                    $('#groupid option').remove();
+
+                    await checkTokenRefresh();
+                    $.ajax({
+                        type: "post",
+                        url: $('#wonderlabendpoint').val() + "/homepage/v1/group/getall",
+                        dataType: "json",
+                        headers: {
+                            authorization: $('#accesstoken').val()
+                        }
+                    }).done(function (resp) {
+                        if (!resp.resultCode || resp.resultCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#groups').val(JSON.stringify(resp.data.groups, null, 2));
+                        $.each(resp.data.groups, function (index, group) {
+                            $option = $('<option>')
+                                .val(group.groupID)
+                                .text(group.groupName + '(' + group.groupID + ')');
+                            $("#groupid").append($option);
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error. please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                $('#getdevices').click(async function () {
+                    $('#devices').val('');
+
+                    await checkTokenRefresh();
+                    $.ajax({
+                        type: "post",
+                        url: $('#wonderlabendpoint').val() + "/homepage/v1/device/getall",
+                        data: JSON.stringify({
+                            groupID: $("#groupid option:selected").val()
+                        }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        headers: {
+                            authorization: $('#accesstoken').val()
+                        }
+                    }).done(function (resp) {
+                        if (!resp.resultCode || resp.resultCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#devices').val(JSON.stringify(resp.data, null, 2));
+                        drawDeviceListTable();
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error. please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                $('#save-devices').click(function () {
+                    if (confirm("Save to the browser's local storage.")) {
+                        localStorage.setItem("groups", $('#groups').val());
+                        localStorage.setItem("devices", $('#devices').val());
+                        localStorage.setItem("groupid", $("#groupid option:selected").val());
+                    }
+                });
+                $('#load-devices').click(function () {
+                    if (confirm("Load from the browser's local storage.")) {
+                        $('#groups').val(localStorage.getItem("groups"));
+                        $('#devices').val(localStorage.getItem("devices"));
+                        $.each(JSON.parse($('#groups').val()), function (index, group) {
+                            $option = $('<option>')
+                                .val(group.groupID)
+                                .text(group.groupName + '(' + group.groupID + ')')
+                                .prop('selected', group.groupID === localStorage.getItem("groupid"));
+                            $("#groupid").append($option);
+                        });
+                        drawDeviceListTable();
+                    }
+                });
+                
+                $('#connectAsViewer').click(async function () {
+                    $('#connectAsViewerResponse').val('');
+                    $('#kvsChannel').val('');
+                    $('#kvsAccess').val('');
+                    $('#kvsSecret').val('');
+                    $('#kvsToken').val('');
+                    $('#kvsExpiration').val('');
+
+                    await checkTokenRefresh();
+                    $.ajax({
+                        type: "post",
+                        url: $('#wonderlabendpoint').val() + "/kvs/v1/connectAsViewer",
+                        data: JSON.stringify({
+                            deviceList: [$("#deviceId option:selected").val()]
+                        }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        headers: {
+                            authorization: $('#accesstoken').val()
+                        }
+                    }).done(function (resp) {
+                        if (!resp.resultCode || resp.resultCode != 100) {
+                            alert("Server Error. please check console log.");
+                            console.log(resp);
+                            return;
+                        }
+                        $('#connectAsViewerResponse').val(JSON.stringify(resp.data, null, 2));
+                        $('#kvsChannel').val(resp.data.channels[$("#deviceId option:selected").val()]);
+                        $('#kvsAccess').val(resp.data.credential.access);
+                        $('#kvsSecret').val(resp.data.credential.secret);
+                        $('#kvsToken').val(resp.data.credential.token);
+                        $('#kvsExpiration').val(new Date(resp.data.credential.expiration).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo'  }));
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Server Error. please check console log.");
+                        console.log(jqXHR.status);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    });
+                });
+                
+                $('#save-connectAsViewer').click(function () {
+                    if (confirm("Save to the browser's local storage.")) {
+                        localStorage.setItem("connectAsViewerResponse", $('#connectAsViewerResponse').val());
+                        localStorage.setItem("kvsChannel", $('#kvsChannel').val());
+                        localStorage.setItem("kvsAccess", $('#kvsAccess').val());
+                        localStorage.setItem("kvsSecret", $('#kvsSecret').val());
+                        localStorage.setItem("kvsToken", $('#kvsToken').val());
+                        localStorage.setItem("kvsExpiration", $('#kvsExpiration').val());
+                    }
+                });
+                $('#load-connectAsViewer').click(function () {
+                    if (confirm("Load from the browser's local storage.")) {
+                        $('#connectAsViewerResponse').val(localStorage.getItem("connectAsViewerResponse"));
+                        $('#kvsChannel').val(localStorage.getItem("kvsChannel"));
+                        $('#kvsAccess').val(localStorage.getItem("kvsAccess"));
+                        $('#kvsSecret').val(localStorage.getItem("kvsSecret"));
+                        $('#kvsToken').val(localStorage.getItem("kvsToken"));
+                        $('#kvsExpiration').val(localStorage.getItem("kvsExpiration"));
+                    }
+                });
+                $('#generate-signedUrl').click(async function () {
+                        let channelName = $('#kvsChannel').val();
+                        let accessKeyId = $('#kvsAccess').val();
+                        let secretAccessKey = $('#kvsSecret').val();
+                        let sessionToken = $('#kvsToken').val();
+                        let clientId = 'go2rtc-client';
+                        let region = "ap-northeast-1";
+
+                        const kinesisVideoClient = new AWS.KinesisVideo({
+                            region: region,
+                            accessKeyId: accessKeyId,
+                            secretAccessKey: secretAccessKey,
+                            sessionToken: sessionToken,
+                            endpoint: null,
+                            correctClockSkew: true,
+                        });
+                        const describeSignalingChannelResponse = await kinesisVideoClient
+                            .describeSignalingChannel({
+                                ChannelName: channelName,
+                            })
+                            .promise();
+
+                        const channelARN = describeSignalingChannelResponse.ChannelInfo.ChannelARN;
+
+                        const getSignalingChannelEndpointResponse = await kinesisVideoClient
+                            .getSignalingChannelEndpoint({
+                                ChannelARN: channelARN,
+                                SingleMasterChannelEndpointConfiguration: {
+                                    Protocols: ['WSS', 'HTTPS'],
+                                    Role: KVSWebRTC.Role.VIEWER,
+                                },
+                            })
+                            .promise();
+
+                        const endpointsByProtocol = getSignalingChannelEndpointResponse.ResourceEndpointList.reduce((endpoints, endpoint) => {
+                            endpoints[endpoint.Protocol] = endpoint.ResourceEndpoint;
+                            return endpoints;
+                        }, {});
+
+                        const kinesisVideoSignalingChannelsClient = new AWS.KinesisVideoSignalingChannels({
+                            region: region,
+                            accessKeyId: accessKeyId,
+                            secretAccessKey: secretAccessKey,
+                            sessionToken: sessionToken,
+                            endpoint: endpointsByProtocol.HTTPS,
+                            correctClockSkew: true,
+                        });
+
+                        const getIceServerConfigResponse = await kinesisVideoSignalingChannelsClient
+                            .getIceServerConfig({
+                                ChannelARN: channelARN,
+                            })
+                            .promise();
+
+                        const iceServers = [];
+                        iceServers.push({ urls: `stun:stun.kinesisvideo.${region}.amazonaws.com:443` });
+                        getIceServerConfigResponse.IceServerList.forEach(iceServer =>
+                            iceServers.push({
+                                urls: iceServer.Uris,
+                                username: iceServer.Username,
+                                credential: iceServer.Password,
+                            }),
+                        );
+
+                        let credentials = {
+                            accessKeyId: accessKeyId,
+                            secretAccessKey: secretAccessKey,
+                            sessionToken: sessionToken,
+                        };
+                        let requestSigner = new KVSWebRTC.SigV4RequestSigner(region, credentials);
+                        const queryParams = {
+                            'X-Amz-ChannelARN': channelARN,
+                            'X-Amz-ClientId': clientId,
+                        };
+
+                        const retVal = await requestSigner.getSignedURL(endpointsByProtocol.WSS, queryParams, new Date());
+                        $("#signedUrl").val(retVal);
+                        $("#iceServer").val(JSON.stringify(iceServers));
+                        let go2rtcYaml = "webrtc-switchbot: webrtc:"+retVal+"#format=switchbot#resolution=HD#client_id="+clientId+"#ice_servers="+JSON.stringify(iceServers)+"\r\n";
+                        go2rtcYaml += "webrtc-kinesis: webrtc:"+retVal+"#format=kinesis#client_id="+clientId+"#ice_servers="+JSON.stringify(iceServers)+"";
+                        $("#go2rtc").val(go2rtcYaml);
+                        let go2rtcPut = "http://localhost:1984/api/streams?src="+encodeURIComponent("webrtc:"+retVal+"#format=switchbot#resolution=HD#client_id="+clientId+"#ice_servers="+JSON.stringify(iceServers))+"&name=webrtc-switchbot";
+                        $("#go2rtc-put").val(go2rtcPut);
+                        let go2rtcCredYaml = "webrtc-switchbot: webrtc:#format=switchbot#resolution=HD#region="+region+"#natTraversal=disable#clientId="+clientId+"#channelName="+channelName+"#accessKeyId="+accessKeyId+"#secretAccessKey="+secretAccessKey+"#sessionToken="+sessionToken+"\r\n";
+                        go2rtcCredYaml += "webrtc-kinesis-credential: webrtc:#format=kinesis-credential#natTraversal=disable#region="+region+"#clientId="+clientId+"#channelName="+channelName+"#accessKeyId="+accessKeyId+"#secretAccessKey="+secretAccessKey+"#sessionToken="+sessionToken;
+                        $("#go2rtc-cred").val(go2rtcCredYaml);
+                        let go2rtcCredPut = "http://localhost:1984/api/streams?src="+encodeURIComponent("webrtc:#format=switchbot#resolution=HD#region="+region+"#natTraversal=disable#clientId="+clientId+"#channelName="+channelName+"#accessKeyId="+accessKeyId+"#secretAccessKey="+secretAccessKey+"#sessionToken="+sessionToken)+"&name=webrtc-switchbot";
+                        $("#go2rtc-cred-put").val(go2rtcCredPut);
+                });
+            });
+
+            function loadStorageAll() {
+                $('#accesstoken').val(localStorage.getItem("accesstoken"));
+                $('#refreshtoken').val(localStorage.getItem("refreshtoken"));
+                $('#accesstoken-decode').val(localStorage.getItem("accesstoken-decode"));
+                $('#deviceid').val(localStorage.getItem("deviceid"));
+                $('#userinfo').val(localStorage.getItem("userinfo"));
+                $('#botregion').val(localStorage.getItem("botregion"));
+                $('#endpoints').val(localStorage.getItem("endpoints"));
+                $('#wonderlabendpoint').val(localStorage.getItem("wonderlabendpoint"));
+                $('#groups').val(localStorage.getItem("groups"));
+                $('#devices').val(localStorage.getItem("devices"));
+                $('#connectAsViewerResponse').val(localStorage.getItem("connectAsViewerResponse"));
+                $('#kvsChannel').val(localStorage.getItem("kvsChannel"));
+                $('#kvsAccess').val(localStorage.getItem("kvsAccess"));
+                $('#kvsSecret').val(localStorage.getItem("kvsSecret"));
+                $('#kvsToken').val(localStorage.getItem("kvsToken"));
+                $('#kvsExpiration').val(localStorage.getItem("kvsExpiration"));
+
+                if ($('#groups').val() !== '') {
+                    $.each(JSON.parse($('#groups').val()), function (index, group) {
+                        $option = $('<option>')
+                            .val(group.groupID)
+                            .text(group.groupName + '(' + group.groupID + ')')
+                            .prop('selected', group.groupID === localStorage.getItem("groupid"));
+                        $("#groupid").append($option);
+                    });
+                    drawDeviceListTable();
+                }
+            }
+            function showDeviceDetail(sender) {
+                let data = JSON.parse($('#devices').val());
+                let mac = $(sender).closest('tr').find('.deviceId').text();
+                let device = data.devices.filter(v => v.device_mac === mac);
+                if (device.length === 1) {
+                    $('#deviceDetail').val(JSON.stringify(device[0], null, 2));
+                } else {
+                    let remote = data.remotes.filter(v => v.remoteID === mac);
+                    $('#deviceDetail').val(JSON.stringify(remote[0], null, 2));
+                }
+            }
+            function drawDeviceListTable() {
+                $("#deviceListTable tbody tr").remove();
+                $('#deviceId option').remove();
+                let data = JSON.parse($('#devices').val());
+                $.each(data.devices, function (index, device) {
+                    let tr = $($('#deviceListRowTemplate').html());
+                    tr.find(".deviceName").text(device.device_name);
+                    tr.find(".deviceType").text(device.device_detail.device_type);
+                    tr.find(".deviceId").text(device.device_mac);
+                    $("#deviceListTable tbody").append(tr);
+                    if(device.device_detail.device_type == "WoCamKvs5mp"){
+                        $option = $('<option>')
+                        .val(device.device_mac)
+                        .text(device.device_name + '(' + device.device_detail.device_type + ')');
+                        $("#deviceId").append($option);
+                    }
+                });
+                $.each(data.remotes, function (index, remote) {
+                    let tr = $($('#deviceListRowTemplate').html());
+                    tr.find(".deviceName").text(remote.remoteName);
+                    tr.find(".deviceType").text(getRemoteDeviceTypeName(remote.type));
+                    tr.find(".deviceId").text(remote.remoteID);
+                    $("#deviceListTable tbody").append(tr);
+                });
+            }
+            function getRemoteDeviceTypeName(type) {
+                switch (type) {
+                    case 1: return "AirConditioner";
+                    case 2: return "TV";
+                    case 3: return "IPTV";
+                    case 4: return "Set Top Box";
+                    case 5: return "DVD";
+                    case 6: return "Fan";
+                    case 7: return "Projector";
+                    case 8: return "Camera";
+                    case 9: return "Others";
+                    case 10: return "Air Purifier";
+                    case 11: return "Speaker";
+                    case 12: return "Water Heater";
+                    case 13: return "Vacuum Cleaner";
+                    case 14: return "Light";
+                    case 15: return "DIY Air Conditioner";
+                    case 16: return "DIY TV";
+                    case 17: return "DIY IPTV";
+                    case 18: return "DIY Set Top Box";
+                    case 19: return "DIY DVD";
+                    case 20: return "DIY Fan";
+                    case 21: return "DIY Projector";
+                    case 22: return "DIY Camera";
+                    case 23: return "DIY Air Purifier";
+                    case 24: return "DIY Speaker";
+                    case 25: return "DIY Water Heater";
+                    case 26: return "DIY Vacuum Cleaner";
+                    case 27: return "DIY Light";
+                    default: return "unknown(" + type.toString() + ")";
+                }
+            }
+            function parseJwt(token) {
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                return JSON.parse(decodeURIComponent(window.atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join('')));
+            }
+            function getJwtPaylod(token) {
+                return JSON.stringify(parseJwt(token), null, ' ');
+            }
+            async function checkTokenRefresh() {
+                let token = $('#accesstoken').val();
+                if (!isJwtExpierd(token)) {
+                    return $('#accesstoken').val();
+                }
+                await $.ajax({
+                    type: "post",
+                    url: "https://account.api.switchbot.net/account/api/v1/user/token/refresh",
+                    data: JSON.stringify({
+                        clientId: "5nnwmhmsa9xxskm14hd85lm9bm",
+                        clientSecret: "vzxjw7rvmduka4rlysdcv0bfke70icql33ol1pvr",
+                        deviceId: $('#deviceid').val(),
+                        refreshToken: $('#refreshtoken').val(),
+                        userId: getUserId(token),
+                    }),
+                    contentType: 'application/json',
+                    dataType: "json",
+                }).done(function (resp) {
+                    if (!resp.statusCode || resp.statusCode != 100) {
+                        alert("Server Error. please check console log.");
+                        console.log(resp);
+                        return;
+                    }
+                    $('#accesstoken').val(resp.body.access_token);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("Server Error.please check console log.");
+                    console.log(jqXHR.status);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                });
+                return $('#accesstoken').val();
+            }
+            function isJwtExpierd(token) {
+                return Date.now() >= parseJwt(token).exp * 1000
+            }
+            function getUserId(token) {
+                return parseJwt(token).userID;
+            }
+        </script>
+</body>
+
+</html>
